@@ -1,0 +1,95 @@
+1、创建购物车表：
+
+代码：
+mysql> create table gouwuche(id int primary key auto_increment,name varchar(20) not null,num int(10));
+Query OK, 0 rows affected (0.23 sec)
+结果：
+mysql> show tables;
++-----------------+
+| Tables_in_gguoy |
++-----------------+
+| gouwuche        |
++-----------------+
+1 row in set (0.00 sec)
+
+2、将购物车中的表，增加“喜欢”、“折扣提醒”、“双十一愿望”：
+
+代码：
+mysql> alter table gouwuche add xihuan bit default 1;
+Query OK, 0 rows affected (0.06 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table gouwuche add zhekoutixing bit default 1;
+Query OK, 0 rows affected (0.05 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+
+mysql> alter table gouwuche add yuanwang varchar(20);
+Query OK, 0 rows affected (0.04 sec)
+Records: 0  Duplicates: 0  Warnings: 0
+结果：
+mysql> desc gouwuche;
++--------------+-------------+------+-----+---------+----------------+
+| Field        | Type        | Null | Key | Default | Extra          |
++--------------+-------------+------+-----+---------+----------------+
+| id           | int(11)     | NO   | PRI | NULL    | auto_increment |
+| name         | varchar(20) | NO   |     | NULL    |                |
+| num          | int(10)     | YES  |     | NULL    |                |
+| xihuan       | bit(1)      | YES  |     | b'1'    |                |
+| zhekoutixing | bit(1)      | YES  |     | b'1'    |                |
+| yuanwang     | varchar(20) | YES  |     | NULL    |                |
++--------------+-------------+------+-----+---------+----------------+
+6 rows in set (0.01 sec)
+
+3、在购物车表中增加用户，使用一条和多条一次性插入：
+
+代码：
+mysql> insert into gouwuche(id,name,num,xihuan,zhekoutixing,yuanwang)values(1,'zhangsan',001,1,1,'xie');
+Query OK, 1 row affected (0.01 sec)
+
+mysql> insert into gouwuche(id,name,num,xihuan,zhekoutixing,yuanwang)values(2,'lisi',002,1,0,'yashua'),(3,'wangwu',003,1,1,'wazi'),(4,'liliu',004,1,1,'kuzi');
+Query OK, 3 rows affected (0.09 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+结果：mysql> select * from gouwuche;
++----+----------+------+--------+--------------+----------+
+| id | name     | num  | xihuan | zhekoutixing | yuanwang |
++----+----------+------+--------+--------------+----------+
+|  1 | zhangsan |    1 |       |             | xie      |
+|  2 | lisi     |    2 |       |              | yashua   |
+|  3 | wangwu   |    3 |       |             | wazi     |
+|  4 | liliu    |    4 |       |             | kuzi     |
++----+----------+------+--------+--------------+----------+
+4 rows in set (0.00 sec)
+
+4、更新一个用户的双11愿望记录
+
+代码：
+mysql> update gouwuche set yuanwang='yanjing' where id=3;
+Query OK, 1 row affected (0.10 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+结果：
+mysql> select * from gouwuche;
++----+----------+------+--------+--------------+----------+
+| id | name     | num  | xihuan | zhekoutixing | yuanwang |
++----+----------+------+--------+--------------+----------+
+|  1 | zhangsan |    1 |       |             | xie      |
+|  2 | lisi     |    2 |       |              | yashua   |
+|  3 | wangwu   |    3 |       |             | yanjing  |
+|  4 | liliu    |    4 |       |             | kuzi     |
++----+----------+------+--------+--------------+----------+
+4 rows in set (0.00 sec)
+
+5、删除劣质一个用户
+代码：
+mysql> delete from gouwuche where id=2;
+Query OK, 1 row affected (0.02 sec)
+
+结果：
+mysql> select * from gouwuche;
++----+----------+------+--------+--------------+----------+
+| id | name     | num  | xihuan | zhekoutixing | yuanwang |
++----+----------+------+--------+--------------+----------+
+|  1 | zhangsan |    1 |       |             | xie      |
+|  3 | wangwu   |    3 |       |             | yanjing  |
+|  4 | liliu    |    4 |       |             | kuzi     |
++----+----------+------+--------+--------------+----------+
+3 rows in set (0.00 sec)
