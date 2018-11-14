@@ -1,0 +1,79 @@
+1、创建列表
+mysql> create table dianying(name varchar(20) not null,time char(15),director varchar(20) not null,score int(3) not null);
+Query OK, 0 rows affected (0.13 sec)
+结果：
+mysql> desc dianying;
++----------+-------------+------+-----+---------+-------+
+| Field    | Type        | Null | Key | Default | Extra |
++----------+-------------+------+-----+---------+-------+
+| name     | varchar(20) | NO   |     | NULL    |       |
+| time     | char(15)    | YES  |     | NULL    |       |
+| director | varchar(20) | NO   |     | NULL    |       |
+| score    | int(3)      | NO   |     | NULL    |       |
++----------+-------------+------+-----+---------+-------+
+4 rows in set (0.00 sec)
+
+
+2、插入电影数据
+mysql> insert into dianying(name,time,director,score) values('yichuhaoxi','2018-8-10','huangbo',76);
+Query OK, 1 row affected (0.12 sec)
+
+mysql> insert into dianying(name,time,director,score) values('dongwushijie','2018-6-29','hanyan',76),('wobushiyaosheng','2018-7-5','wennuye',90),('wushuang','2018-9-30','zhuangwenqiang',85);
+Query OK, 3 rows affected (0.07 sec)
+Records: 3  Duplicates: 0  Warnings: 0
+结果：
+mysql> select * from dianying;
++-----------------+-----------+----------------+-------+
+| name            | time      | director       | score |
++-----------------+-----------+----------------+-------+
+| yichuhaoxi      | 2018-8-10 | huangbo        |    76 |
+| dongwushijie    | 2018-6-29 | hanyan         |    76 |
+| wobushiyaosheng | 2018-7-5  | wennuye        |    90 |
+| wushuang        | 2018-9-30 | zhuangwenqiang |    85 |
++-----------------+-----------+----------------+-------+
+4 rows in set (0.00 sec)
+
+
+3、按条件进行查询
+
+（1）、模糊查询电影名字：
+mysql> select name,name like '%wushuang%' from dianying;
++-----------------+------------------------+
+| name            | name like '%wushuang%' |
++-----------------+------------------------+
+| yichuhaoxi      |                      0 |
+| dongwushijie    |                      0 |
+| wobushiyaosheng |                      0 |
+| wushuang        |                      1 |
++-----------------+------------------------+
+4 rows in set (0.00 sec)
+
+（2）、模糊查询导演名字：
+mysql> select name,director like '%huangbo%' from dianying;
++-----------------+---------------------------+
+| name            | director like '%huangbo%' |
++-----------------+---------------------------+
+| yichuhaoxi      |                         1 |
+| dongwushijie    |                         0 |
+| wobushiyaosheng |                         0 |
+| wushuang        |                         0 |
++-----------------+---------------------------+
+4 rows in set (0.00 sec)
+
+（3）、查询某年份的电影
+mysql> select name,time from dianying where time='2018-6-29';
++--------------+-----------+
+| name         | time      |
++--------------+-----------+
+| dongwushijie | 2018-6-29 |
++--------------+-----------+
+1 row in set (0.00 sec)
+
+（4）、查询评高分电影
+mysql> select name,max(score) from dianying;
++------------+------------+
+| name       | max(score) |
++------------+------------+
+| yichuhaoxi |         90 |
++------------+------------+
+1 row in set (0.00 sec)
