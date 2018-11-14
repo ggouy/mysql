@@ -1,0 +1,66 @@
+1、创建表单
+mysql> create table shoucang(yonghu varchar(20) unique,id int primary key auto_increment,goods varchar(20) not null,collect int default 1);
+Query OK, 0 rows affected (0.18 sec)
+结果：
+mysql> desc shoucang;
++---------+-------------+------+-----+---------+----------------+
+| Field   | Type        | Null | Key | Default | Extra          |
++---------+-------------+------+-----+---------+----------------+
+| yonghu  | varchar(11) | NO   | UNI | NULL    |                |
+| id      | int(11)     | NO   | PRI | NULL    | auto_increment |
+| goods   | varchar(11) | NO   |     | NULL    |                |
+| collect | int(11)     | YES  |     | 1       |                |
++---------+-------------+------+-----+---------+----------------+
+4 rows in set (0.01 sec)
+
+2、添加数据
+mysql>  insert into shoucang(yonghu,id,goods,collect) values('xjn',1,'book',1),(' ',2,'bag',0);
+Query OK, 2 rows affected (0.10 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+结果：
+mysql> select * from shoucang;
++--------+----+-------+---------+
+| yonghu | id | goods | collect |
++--------+----+-------+---------+
+| xjn    |  1 | book  |       1 |
+|        |  2 | bag   |       0 |
++--------+----+-------+---------+
+2 rows in set (0.00 sec)
+
+3、更新表单（将Id为2的商品添加为收藏）
+mysql> update shoucang set collect=1 where id=2;
+Query OK, 1 row affected (0.03 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+结果：
+mysql> select * from shoucang;
++--------+----+-------+---------+
+| yonghu | id | goods | collect |
++--------+----+-------+---------+
+| xjn    |  1 | book  |       1 |
+|        |  2 | bag   |       1 |
++--------+----+-------+---------+
+2 rows in set (0.00 sec)
+
+4、更新表单（将Id为1的商品取消收藏）
+mysql> update shoucang set collect=0 where id=1;
+Query OK, 1 row affected (0.07 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+结果：
+mysql> select * from shoucang;
++--------+----+-------+---------+
+| yonghu | id | goods | collect |
++--------+----+-------+---------+
+| xjn    |  1 | book  |       0 |
+|        |  2 | bag   |       1 |
++--------+----+-------+---------+
+2 rows in set (0.00 sec)
+
+5、按商品名进行查找
+mysql> select goods from shoucang;
++-------+
+| goods |
++-------+
+| book  |
+| bag   |
++-------+
+2 rows in set (0.00 sec)
