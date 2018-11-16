@@ -1,0 +1,95 @@
+1、创建用户表：
+mysql> CREATE TABLE yonghu (
+    -> yonghu_id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    -> name VARCHAR(50) NOT NULL,
+    -> yonghu_password int NOT NULL,
+    -> last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY (yonghu_id)
+    -> )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+Query OK, 0 rows affected, 1 warning (0.19 sec)
+
+结果：
+mysql> desc yonghu;
++-----------------+----------------------+------+-----+-------------------+-----------------------------+
+| Field           | Type                 | Null | Key | Default           | Extra                       |
++-----------------+----------------------+------+-----+-------------------+-----------------------------+
+| yonghu_id       | smallint(5) unsigned | NO   | PRI | NULL              | auto_increment              |
+| name            | varchar(50)          | NO   |     | NULL              |                             |
+| yonghu_password | int(11)              | NO   |     | NULL              |                             |
+| last_update     | timestamp            | NO   |     | CURRENT_TIMESTAMP | on update CURRENT_TIMESTAMP |
++-----------------+----------------------+------+-----+-------------------+-----------------------------+
+4 rows in set (0.03 sec)
+
+2、创建装备表
+mysql> CREATE TABLE zhuangbei (
+    -> zhuangbei_id SMALLINT UNSIGNED NOT NULL AUTO_INCREMENT,
+    -> zhuangbei_name VARCHAR(50) NOT NULL,
+    -> zhuangbei_money int NOT NULL,
+    -> yonghu_id SMALLINT UNSIGNED NOT NULL,
+    -> last_update TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, PRIMARY KEY (zhuangbei_id),
+    -> KEY idx_fk_yonghu_id (yonghu_id),
+    -> CONSTRAINT `fk_zhuangbei_yonghu` FOREIGN KEY (yonghu_id) REFERENCES yonghu (yonghu_id) ON DELETE RESTRICT ON UPDATE CASCADE
+    -> )ENGINE=InnoDB DEFAULT CHARSET=utf8;
+Query OK, 0 rows affected, 1 warning (0.15 sec)
+
+结果：
+mysql> desc zhuangbei;
++-----------------+----------------------+------+-----+-------------------+-----------------------------+
+| Field           | Type                 | Null | Key | Default           | Extra                       |
++-----------------+----------------------+------+-----+-------------------+-----------------------------+
+| zhuangbei_id    | smallint(5) unsigned | NO   | PRI | NULL              | auto_increment              |
+| zhuangbei_name  | varchar(50)          | NO   |     | NULL              |                             |
+| zhuangbei_money | int(11)              | NO   |     | NULL              |                             |
+| yonghu_id       | smallint(5) unsigned | NO   | MUL | NULL              |                             |
+| last_update     | timestamp            | NO   |     | CURRENT_TIMESTAMP | on update CURRENT_TIMESTAMP |
++-----------------+----------------------+------+-----+-------------------+-----------------------------+
+5 rows in set (0.00 sec)
+
+3、插入数据：
+（1）、用户表：
+mysql> insert into yonghu(yonghu_id,name,yonghu_password) values(1,'zhangsan','860759729'),(2,'lisi','1196815927');
+Query OK, 2 rows affected (0.06 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+结果：
+mysql> select * from yonghu;
++-----------+----------+-----------------+---------------------+
+| yonghu_id | name     | yonghu_password | last_update         |
++-----------+----------+-----------------+---------------------+
+|         1 | zhangsan |       860759729 | 2018-11-16 10:56:39 |
+|         2 | lisi     |      1196815927 | 2018-11-16 10:56:39 |
++-----------+----------+-----------------+---------------------+
+2 rows in set (0.00 sec)
+
+实验删除用户表的数据：
+mysql> delete from yonghu where yonghu_id=1;
+ERROR 1451 (23000): Cannot delete or update a parent row: a foreign key constraint fails (`s1`.`zhuangbei`, CONSTRAINT `fk_zhuangbei_yonghu` FOREIGN KEY (`yonghu_id`) REFERENCES `yonghu` (`yonghu_id`) ON UPDATE CASCADE)
+
+更新用户表数据:
+mysql> update yonghu set yonghu_id = 4 where yonghu_id = 1;
+Query OK, 1 row affected (0.06 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from yonghu;
++-----------+----------+-----------------+---------------------+
+| yonghu_id | name     | yonghu_password | last_update         |
++-----------+----------+-----------------+---------------------+
+|         2 | lisi     |      1196815927 | 2018-11-16 11:01:12 |
+|         4 | zhangsan |       860759729 | 2018-11-16 11:10:29 |
++-----------+----------+-----------------+---------------------+
+2 rows in set (0.00 sec)
+
+
+（2）、装备表：
+mysql> insert into zhuangbei(zhuangbei_id,zhuangbei_name,zhuangbei_money,yonghu_id) values(1,'dao','1000',1),(2,'cha','1500',2);
+Query OK, 2 rows affected (0.08 sec)
+Records: 2  Duplicates: 0  Warnings: 0
+
+结果：
+mysql> select * from zhuangbei;
++--------------+----------------+-----------------+-----------+---------------------+
+| zhuangbei_id | zhuangbei_name | zhuangbei_money | yonghu_id | last_update         |
++--------------+----------------+-----------------+-----------+---------------------+
+|            1 | dao            |            1000 |         1 | 2018-11-16 11:05:35 |
+|            2 | cha            |            1500 |         2 | 2018-11-16 11:05:35 |
++--------------+----------------+-----------------+-----------+---------------------+
+2 rows in set (0.00 sec)
